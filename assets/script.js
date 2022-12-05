@@ -1,22 +1,33 @@
 var click = 0;
+var container = document.querySelectorAll("section");
 var questions = document.querySelectorAll(".question");
-// var start = document.querySelector(".start");
 var correctAnswers = ["0", "2", "1", "1", "2"];
+var start = document.querySelector(".start button");
+
+// var displayQuestion = function () {
+//     for (var question of questions) {
+//         if (question.dataset.index != click) {
+//             question.style.display = "none";
+//         } else {
+//             question.style.display = "block";
+//         }
+//     }
+// };
 
 var displayQuestion = function () {
-    for (var question of questions) {
-        if (question.dataset.index != click) {
-            question.style.display = "none";
+    for (var section of container) {
+        if (section.dataset.index != click) {
+            section.style.display = "none";
         } else {
-            question.style.display = "block";
+            section.style.display = "block";    
         }
     }
-};
+}
 
 var advance = function (event) {
     var element = event.target;
-
-    if (element.matches(".question button")) {
+    if (element.matches("button")) {
+        var choice = element.dataset.answer === correctAnswers[click];
         if (click < questions.length - 1) {
             click++;
         }
@@ -27,10 +38,3 @@ var advance = function (event) {
 document.addEventListener("click", advance);
 
 displayQuestion();
-
-
-// var startQuiz = function() {
-  
-// };
-
-// start.addEventListener("click", startQuiz);
