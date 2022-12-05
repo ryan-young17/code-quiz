@@ -1,6 +1,7 @@
 var click = 0;
 var questions = document.querySelectorAll(".question");
 // var start = document.querySelector(".start");
+var correctAnswers = ["0", "2", "1", "1", "2"];
 
 var displayQuestion = function () {
     for (var question of questions) {
