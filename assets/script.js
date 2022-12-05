@@ -4,16 +4,10 @@ var questions = document.querySelectorAll(".question");
 var correctAnswers = ["0", "2", "1", "1", "2"];
 var start = document.querySelector(".start");
 var timeEl = document.querySelector(".timer");
+var timeLeft = 60;
+var penalty = 10;
 
-// var displayQuestion = function () {
-//     for (var question of questions) {
-//         if (question.dataset.index != click) {
-//             question.style.display = "none";
-//         } else {
-//             question.style.display = "block";
-//         }
-//     }
-// };
+// Quiz Function
 
 var quiz = function () {
 
@@ -40,8 +34,10 @@ var displayQuestion = function () {
 var advance = function (event) {
     var element = event.target;
     if (element.matches(".question button")) {
-        var choice = element.dataset.answer === correctAnswers[click];
-        // 
+        // var choice = element.dataset.answer === correctAnswers[click];
+        if (element.dataset.answer !== correctAnswers[click]) {
+            timeLeft = timeLeft - penalty;
+        }
         if (click < questions.length - 1) {
             click++;
         }
@@ -55,7 +51,7 @@ displayQuestion();
 
 };
 
-var timeLeft = 60;
+// Timer Functions
 
 var timerMessage = function () {
     var label = "seconds left";
@@ -82,6 +78,9 @@ var setTime = function () {
     }
 
     }, 1000);
+
+
+
 };
 
 start.addEventListener("click", function () {
