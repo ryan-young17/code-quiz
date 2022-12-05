@@ -4,7 +4,11 @@ var questions = document.querySelectorAll(".question");
 var start = document.querySelector(".start");
 
 var displayQuestion = function () {
-    
+    for (var question of questions) {
+        if (question.dataset.index != click) {
+            question.style.display = "none";
+        }
+    }
 };
 
 
