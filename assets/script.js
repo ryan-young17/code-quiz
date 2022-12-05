@@ -7,9 +7,12 @@ var timeEl = document.querySelector(".timer");
 var timeLeft = 60;
 var penalty = 10;
 var score = 0;
+var questionContainer = document.querySelector(".questionWrapper");
+var endGame = document.querySelector(".endGame");
 
+questionContainer.style.display = "none";
+endGame.style.display = "none";
 
-// Timer Functions
 
 var timerMessage = function () {
     var label = "seconds left";
@@ -19,9 +22,12 @@ var timerMessage = function () {
     timeEl.textContent = timeLeft + " " + label;
 };
 
-var sendMessage = function() {
-    timeEl.textContent = "Oh no! You've run out of time!";
+// Make this a function for highscore tracking
+var displayEndGame = function() {
+    timeEl.textContent = "You've run out of time!";
     timeEl.style.color = "red";
+    questionContainer.style.display = "none";
+    endGame.style.display = "block";
 };
 
 var setTime = function () {
@@ -30,28 +36,18 @@ var setTime = function () {
         timeLeft--;
     timerMessage();
 
-    if(timeLeft === 0) {
+    if(timeLeft <= 0) {
         clearInterval(timerInterval);
-        sendMessage();
+        displayEndGame();
     }
 
     }, 1000);
 
 };
 
-// Quiz Function
+// Quiz Functions
 
 var quiz = function () {
-
-// var displayQuestion = function () {
-//     for (var section of container) {
-//         if (section.dataset.index != click) {
-//             section.style.display = "none";
-//         } else {
-//             section.style.display = "block";    
-//         }
-//     }
-// }
 
 var displayQuestion = function () {
     for (var question of questions) {
@@ -66,10 +62,6 @@ var displayQuestion = function () {
 var advance = function (event) {
     var element = event.target;
     if (element.matches(".question button")) {
-        // var choice = element.dataset.answer === correctAnswers[click];
-        // if (element.dataset.answer !== correctAnswers[click]) {
-        //     timeLeft = timeLeft - penalty;
-        // }
         if (element.dataset.answer === correctAnswers[click]) {
             score = score + 10;
             console.log(score);
@@ -91,6 +83,7 @@ displayQuestion();
 
 start.addEventListener("click", function () {
     start.style.display = "none";
+    questionContainer.style.display = "flex";
     quiz();
     setTime();
 });
