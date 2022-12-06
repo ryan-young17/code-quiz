@@ -10,15 +10,14 @@ var penalty = 5;
 var score = 0;
 var questionContainer = document.querySelector(".questionWrapper");
 var endScreen = document.querySelector(".endScreen");
-var highScoreScreen = document.querySelector(".highscoreScreen");
+var highScoreScreen = document.querySelector(".highScoreScreen");
 var submitButton = document.querySelector("#submit");
 var restartButton = document.querySelector("#restart");
+var scoreList = document.querySelector("#scoreList");
 
 questionContainer.style.display = "none";
 endScreen.style.display = "none";
 highScoreScreen.style.display = "none";
-
-// Quiz Functions
 
 var quiz = function () {
 
@@ -31,7 +30,7 @@ var quiz = function () {
             }
         }
     };
-    
+
     var advance = function (event) {
         var element = event.target;
         if (element.matches(".question button")) {
@@ -42,28 +41,27 @@ var quiz = function () {
             }
             if (cursor < questions.length - 1) {
                 cursor++;
+                displayQuestion();
+            } else {
+                displayEndScreen();
             }
-            displayQuestion();
         }
     };
-    
+
     document.addEventListener("click", advance);
-    
+
     displayQuestion();
-    
+
 };
 
-var displayEndScreen = function() {
+var displayEndScreen = function () {
     timeEl.textContent = "End of Quiz";
     timeEl.style.color = "red";
     questionContainer.style.display = "none";
     endScreen.style.display = "block";
+    document.querySelector("#scoreLabel").textContent = score;
 
-    // Need to figure out how to stop timer and display end screen at end of questions.
-    if (cursor >= questions.length) {
-        clearInterval(timerInterval);
-        displayEndScreen();
-    }
+    clearInterval(timerInterval);
 };
 
 var displayHighScoresScreen = function () {
@@ -82,14 +80,14 @@ var timerMessage = function () {
 
 var setTime = function () {
     timerMessage();
-    var timerInterval = setInterval(function () {
+    timerInterval = setInterval(function () {
         timeLeft--;
-    timerMessage();
+        timerMessage();
 
-    if(timeLeft <= 0) {
-        clearInterval(timerInterval);
-        displayEndScreen();
-    }
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            displayEndScreen();
+        }
     }, 1000);
 
 };
@@ -101,37 +99,32 @@ start.addEventListener("click", function () {
     setTime();
 });
 
-// High Score Function
-    
-submitButton.addEventListener("click", function(event) {
+submitButton.addEventListener("click", function (event) {
     event.preventDefault();
-    displayHighScoresScreen();
-
-
+    var userScores = [];
     var userInfo = {
         initials: document.querySelector("#initials").value,
         score: score
     };
-    var showScores = function () {
+    userScores.push(userInfo);
+    var displayScores = function () {
         var lastScore = JSON.parse(localStorage.getItem("userInfo"));
         if (lastScore !== null) {
-            document.querySelector("#msg").textContent = userInfo.initials + " got " + userInfo.score + "!";
-            // var scoreMessage = document.createElement('div');
-            // scoreMessage.textContent = lastScore.initials + " got " + lastScore.score + "!";
-            // highScoreList.appendChild(scoreMessage);
+            var listEl = document.createElement("li");
+            listEl.textContent = userInfo.initials + " | Score: " + userInfo.score;
+            document.querySelector("#scoreList").appendChild(listEl);
         }
     }
-    localStorage.setItem("user", JSON.stringify(userInfo));
-    showScores();
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-    endGame.style.display = "none";
-    highScoreList.style.display = "block";
+    displayHighScoresScreen();
+    displayScores();
 });
 
-restartButton.addEventListener("click", function() {
+restartButton.addEventListener("click", function () {
     start.style.display = "block";
     questionContainer.style.display = "none";
     endScreen.style.display = "none";
     highScoreScreen.style.display = "none";
-    // Need to fix this screen
+    window.location.reload(true);
 });
