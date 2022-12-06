@@ -15,8 +15,6 @@ questionContainer.style.display = "none";
 endGame.style.display = "none";
 highScoreList.style.display = "none";
 
-
-
 var timerMessage = function () {
     var label = "seconds left";
     if (timeLeft === 1) {
@@ -42,7 +40,6 @@ var setTime = function () {
         clearInterval(timerInterval);
         displayEndGame();
     }
-
     }, 1000);
 
 };
@@ -96,10 +93,21 @@ var submitButton = document.querySelector("#submit");
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
 
-    var initials = document.querySelector("#initials").value;
-
-    localStorage.setItem("initials", initials);
-    localStorage.setItem("score", score);
+    var userInfo = {
+        initials: document.querySelector("#initials").value,
+        score: score
+    };
+    var showScores = function () {
+        var lastScore = JSON.parse(localStorage.getItem("userInfo"));
+        if (lastScore !== null) {
+            document.querySelector("#msg").textContent = userInfo.initials + " got " + userInfo.score + "!";
+            // var scoreMessage = document.createElement('div');
+            // scoreMessage.textContent = lastScore.initials + " got " + lastScore.score + "!";
+            // highScoreList.appendChild(scoreMessage);
+        }
+    }
+    localStorage.setItem("user", JSON.stringify(userInfo));
+    showScores();
 
     endGame.style.display = "none";
     highScoreList.style.display = "block";
