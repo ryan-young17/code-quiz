@@ -1,19 +1,76 @@
-var click = 0;
+var cursor = 0;
 var container = document.querySelectorAll("section");
 var questions = document.querySelectorAll(".question");
 var correctAnswers = ["0", "2", "1", "1", "2"];
 var start = document.querySelector(".start");
 var timeEl = document.querySelector(".timer");
+var timerInterval;
 var timeLeft = 60;
-var penalty = 10;
+var penalty = 5;
 var score = 0;
 var questionContainer = document.querySelector(".questionWrapper");
-var endGame = document.querySelector(".endGame");
-var highScoreList = document.querySelector(".highscore");
+var endScreen = document.querySelector(".endScreen");
+var highScoreScreen = document.querySelector(".highscoreScreen");
+var submitButton = document.querySelector("#submit");
+var restartButton = document.querySelector("#restart");
 
 questionContainer.style.display = "none";
-endGame.style.display = "none";
-highScoreList.style.display = "none";
+endScreen.style.display = "none";
+highScoreScreen.style.display = "none";
+
+// Quiz Functions
+
+var quiz = function () {
+
+    var displayQuestion = function () {
+        for (var question of questions) {
+            if (question.dataset.index != cursor) {
+                question.style.display = "none";
+            } else {
+                question.style.display = "block";
+            }
+        }
+    };
+    
+    var advance = function (event) {
+        var element = event.target;
+        if (element.matches(".question button")) {
+            if (element.dataset.answer === correctAnswers[cursor]) {
+                score = score + 10;
+            } else {
+                timeLeft = timeLeft - penalty;
+            }
+            if (cursor < questions.length - 1) {
+                cursor++;
+            }
+            displayQuestion();
+        }
+    };
+    
+    document.addEventListener("click", advance);
+    
+    displayQuestion();
+    
+};
+
+var displayEndScreen = function() {
+    timeEl.textContent = "End of Quiz";
+    timeEl.style.color = "red";
+    questionContainer.style.display = "none";
+    endScreen.style.display = "block";
+
+    // Need to figure out how to stop timer and display end screen at end of questions.
+    if (cursor >= questions.length) {
+        clearInterval(timerInterval);
+        displayEndScreen();
+    }
+};
+
+var displayHighScoresScreen = function () {
+    endScreen.style.display = "none";
+    highScoreScreen.style.display = "block";
+}
+
 
 var timerMessage = function () {
     var label = "seconds left";
@@ -21,13 +78,6 @@ var timerMessage = function () {
         label = "second left";
     }
     timeEl.textContent = timeLeft + " " + label;
-};
-
-var displayEndGame = function() {
-    timeEl.textContent = "End of Quiz";
-    timeEl.style.color = "red";
-    questionContainer.style.display = "none";
-    endGame.style.display = "block";
 };
 
 var setTime = function () {
@@ -38,60 +88,25 @@ var setTime = function () {
 
     if(timeLeft <= 0) {
         clearInterval(timerInterval);
-        displayEndGame();
+        displayEndScreen();
     }
     }, 1000);
 
 };
 
-// Quiz Functions
-
-var quiz = function () {
-
-var displayQuestion = function () {
-    for (var question of questions) {
-        if (question.dataset.index != click) {
-            question.style.display = "none";
-        } else {
-            question.style.display = "block";
-        }
-    }
-};
-
-var advance = function (event) {
-    var element = event.target;
-    if (element.matches(".question button")) {
-        if (element.dataset.answer === correctAnswers[click]) {
-            score = score + 10;
-        } else {
-            timeLeft = timeLeft - penalty;
-        }
-        if (click < questions.length - 1) {
-            click++;
-        }
-        displayQuestion();
-    }
-};
-
-document.addEventListener("click", advance);
-
-displayQuestion();
-
-};
-
 start.addEventListener("click", function () {
     start.style.display = "none";
-    questionContainer.style.display = "flex";
+    questionContainer.style.display = "block";
     quiz();
     setTime();
 });
 
 // High Score Function
-
-var submitButton = document.querySelector("#submit");
     
 submitButton.addEventListener("click", function(event) {
     event.preventDefault();
+    displayHighScoresScreen();
+
 
     var userInfo = {
         initials: document.querySelector("#initials").value,
@@ -111,4 +126,12 @@ submitButton.addEventListener("click", function(event) {
 
     endGame.style.display = "none";
     highScoreList.style.display = "block";
+});
+
+restartButton.addEventListener("click", function() {
+    start.style.display = "block";
+    questionContainer.style.display = "none";
+    endScreen.style.display = "none";
+    highScoreScreen.style.display = "none";
+    // Need to fix this screen
 });
