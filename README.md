@@ -1,4 +1,4 @@
-# Challenge 04 - Code Quiz
+# Code Quiz
 
 [Link to my project](https://ryan-young17.github.io/code-quiz/)
 
